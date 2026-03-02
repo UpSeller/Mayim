@@ -9,7 +9,7 @@ import { blogBySlug, blogPosts } from '@/lib/blog-content'
 import { serviceBySlug } from '@/lib/cluster-content'
 
 type Props = {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
 export async function generateStaticParams() {
@@ -17,7 +17,7 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = params
+  const { slug } = await params
   const post = blogBySlug[slug]
 
   if (!post) return { title: 'Artigo não encontrado' }
@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function BlogPostPage({ params }: Props) {
-  const { slug } = params
+  const { slug } = await params
   const post = blogBySlug[slug]
 
   if (!post) notFound()
