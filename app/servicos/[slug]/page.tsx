@@ -7,7 +7,7 @@ import { ServiceJsonLd } from '@/components/seo/ServiceJsonLd'
 import { areaBySlug, serviceBySlug, servicePages } from '@/lib/cluster-content'
 
 type Props = {
-  params: Promise<{ slug: string }>
+  params: { slug: string }
 }
 
 export async function generateStaticParams() {
@@ -15,7 +15,7 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params
+  const { slug } = params
   const service = serviceBySlug[slug]
   if (!service) {
     return { title: 'Serviço não encontrado' }
@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ServiceDetailsPage({ params }: Props) {
-  const { slug } = await params
+  const { slug } = params
   const service = serviceBySlug[slug]
 
   if (!service) {

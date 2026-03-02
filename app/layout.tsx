@@ -1,5 +1,6 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
+import type { ReactNode } from 'react'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { WhatsAppFloat } from '@/components/layout/WhatsAppFloat'
@@ -14,7 +15,7 @@ export const metadata = getDefaultMetadata()
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: ReactNode
 }>) {
   return (
     <html lang="pt-BR">
