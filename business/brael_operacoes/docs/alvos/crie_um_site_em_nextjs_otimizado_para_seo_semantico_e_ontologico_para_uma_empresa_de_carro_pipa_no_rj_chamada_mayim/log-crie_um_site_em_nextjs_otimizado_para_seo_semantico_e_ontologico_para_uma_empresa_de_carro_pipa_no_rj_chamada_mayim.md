@@ -373,3 +373,17 @@ proxima_fase: PHASE_03
     - arquivo: .github/workflows/ci.yml
       resumo: adição de pipeline CI com npm ci + lint + build + typecheck + test em ambiente GitHub.
   status: DONE_COM_RESTRICAO_AMBIENTE
+
+- execution_loop: 19
+  fase: PHASE_04_hardening_tecnico_observabilidade_release
+  achados:
+    blocker:
+      - Checks de CI falhando rapidamente, possivelmente na etapa de setup/cache sem lockfile.
+    alto: []
+    medio:
+      - Configuração do workflow estava sensível a ausência de lockfile e versão de Node mais nova.
+    baixo: []
+  correcoes_aplicadas:
+    - arquivo: .github/workflows/ci.yml
+      resumo: simplificação do setup do CI (Node 20, remoção de cache npm) e instalação robusta com `npm install --no-audit --no-fund`.
+  status: DONE_COM_RESTRICAO_AMBIENTE
