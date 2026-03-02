@@ -1,0 +1,78 @@
+{
+  "fase_id": "PHASE_03",
+  "status": "done",
+  "planspec": {
+    "pilar": "Falta de água no RJ e continuidade operacional",
+    "clusters": [
+      "contingência e emergência hídrica",
+      "dimensionamento de volume",
+      "qualidade e segurança da água"
+    ],
+    "intencoes": [
+      "informacional",
+      "comercial",
+      "transacional assistida"
+    ]
+  },
+  "workflow_19_passos": {
+    "aplicado": true,
+    "evidencia_resumida": [
+      "SERP e PAA mapeados para temas de falta de água, volume e potabilidade",
+      "grafo semântico definido com entidade LocalBusiness + Service + Article",
+      "silo inicial com 1 pilar e 3 clusters conectados a páginas de serviço"
+    ]
+  },
+  "grafo_conteudo": {
+    "nodes": [
+      "blog/falta-de-agua-no-rj-o-que-fazer",
+      "blog/como-calcular-volume-de-carro-pipa",
+      "blog/agua-potavel-carro-pipa-duvidas-comuns",
+      "servicos/abastecimento-residencial",
+      "servicos/abastecimento-comercial",
+      "servicos/abastecimento-obras",
+      "servicos/abastecimento-piscinas"
+    ],
+    "edges": [
+      [
+        "blog/falta-de-agua-no-rj-o-que-fazer",
+        "servicos/abastecimento-residencial"
+      ],
+      [
+        "blog/falta-de-agua-no-rj-o-que-fazer",
+        "servicos/abastecimento-comercial"
+      ],
+      [
+        "blog/como-calcular-volume-de-carro-pipa",
+        "servicos/abastecimento-obras"
+      ],
+      [
+        "blog/como-calcular-volume-de-carro-pipa",
+        "servicos/abastecimento-residencial"
+      ],
+      [
+        "blog/agua-potavel-carro-pipa-duvidas-comuns",
+        "servicos/abastecimento-comercial"
+      ],
+      [
+        "blog/agua-potavel-carro-pipa-duvidas-comuns",
+        "servicos/abastecimento-piscinas"
+      ]
+    ]
+  },
+  "saida_yaml": {
+    "fase_id": "PHASE_03",
+    "status": "done",
+    "blog": {
+      "listagem": true,
+      "artigo": true
+    },
+    "conteudo": {
+      "pilar_publicado": true,
+      "clusters_publicados": 3
+    },
+    "workflow_19_passos": {
+      "aplicado": true
+    },
+    "proxima_fase": "PHASE_04"
+  }
+}
