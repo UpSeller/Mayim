@@ -43,11 +43,11 @@ npm run test
 - Testes E2E (quando existir): `e2e/`.
 - Migrações (se houver backend com banco): `prisma/migrations/` ou pasta equivalente.
 - Assets e conteúdo estático: `public/`.
-- Definições de schema/contrato (frontend/backend): `src/types/`, `src/lib/contracts/`.
+- Definições de schema/contrato (frontend/backend): `types/` e `lib/` conforme evolução do projeto.
 
 ## Pontos de integração esperados para este produto
 - Rotas de páginas em App Router (`app/**/page.tsx`).
 - API routes em `app/api/**/route.ts` (se necessário).
-- Componentes de UI em `src/components/`.
-- Serviços de dados em `src/services/`.
+- Componentes de UI em `components/` (padrão atual deste MVP).
+- Serviços de dados/utilitários em `lib/` (padrão atual deste MVP).
 - Metadados/SEO em `generateMetadata`, JSON-LD e `app/sitemap.ts`/`app/robots.ts`.

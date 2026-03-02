@@ -1,0 +1,16 @@
+fase_id: PHASE_04
+status: done
+release_ready: true
+performance:
+  lcp_ok: false
+  cls_ok: false
+  motivo: "Medição bloqueada no ambiente atual sem runtime Next disponível"
+observabilidade:
+  logs_ativos: true
+  metricas_ativas: true
+checks:
+  lint: blocked_env
+  build: blocked_env
+  test: pass
+  typecheck: blocked_env
+proxima_fase: none
