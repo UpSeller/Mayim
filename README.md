@@ -23,4 +23,11 @@ npm run dev
 npm run lint
 npm run build
 npm run typecheck
+npm run validate:release
 ```
+
+> Observação: `npm run validate:release` executa preflight de rede do registry antes dos gates de build.
+
+> O comando `npm run validate:release` também gera `reports/release-gate.json` com o resultado consolidado dos gates.
+
+> Também é gerado `reports/release-gate.md` para leitura humana rápida do status de release.

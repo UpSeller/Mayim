@@ -28,8 +28,8 @@
 
 ## Status codes
 - `200`: envio aceito com protocolo
-- `400`: erro de validação de payload
-- `429`: reservado para limitação de taxa (evolução futura)
+- `422`: erro de validação de payload (alinhado ao contrato final da PHASE_04)
+- `429`: limitação de taxa ativa (com cabeçalho `Retry-After` em segundos)
 - `500`: reservado para erro interno (evolução futura)
 
 ## Playbook de atendimento (MVP)

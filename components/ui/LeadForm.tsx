@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, type FormEvent } from 'react'
+import { useState, type ChangeEvent, type FormEvent } from 'react'
 import type { LeadApiResponse, LeadPayload } from '@/types/lead'
 
 type LeadFormProps = {
@@ -28,7 +28,7 @@ export function LeadForm({ endpoint, submitLabel, eventName }: LeadFormProps) {
     field: keyof LeadPayload,
     value: LeadPayload[keyof LeadPayload]
   ) => {
-    setForm((current) => ({ ...current, [field]: value }))
+    setForm((current: LeadPayload) => ({ ...current, [field]: value }))
   }
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -36,18 +36,30 @@ export function LeadForm({ endpoint, submitLabel, eventName }: LeadFormProps) {
     setIsSubmitting(true)
     setFeedback(null)
 
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
-    })
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
 
-    const json = (await response.json()) as LeadApiResponse
-    setFeedback(json)
-    setIsSubmitting(false)
+      const fallbackMessage = response.ok
+        ? 'Solicitação enviada com sucesso.'
+        : 'Não foi possível processar sua solicitação agora. Tente novamente em instantes.'
 
-    if (response.ok) {
-      setForm(initialForm)
+      const json = (await response
+        .json()
+        .catch(() => ({ success: response.ok, message: fallbackMessage }))) as LeadApiResponse
+
+      setFeedback(json)
+
+      if (response.ok) {
+        setForm(initialForm)
+      }
+    } catch {
+      setFeedback({ success: false, message: 'Falha de conexão. Tente novamente em instantes.' })
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -60,7 +72,7 @@ export function LeadForm({ endpoint, submitLabel, eventName }: LeadFormProps) {
             required
             minLength={3}
             value={form.nome}
-            onChange={(e) => onFieldChange('nome', e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => onFieldChange('nome', e.target.value)}
             className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
           />
         </label>
@@ -71,7 +83,7 @@ export function LeadForm({ endpoint, submitLabel, eventName }: LeadFormProps) {
             required
             minLength={8}
             value={form.telefone}
-            onChange={(e) => onFieldChange('telefone', e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => onFieldChange('telefone', e.target.value)}
             className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
           />
         </label>
@@ -83,7 +95,7 @@ export function LeadForm({ endpoint, submitLabel, eventName }: LeadFormProps) {
           <input
             type="email"
             value={form.email}
-            onChange={(e) => onFieldChange('email', e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => onFieldChange('email', e.target.value)}
             className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
           />
         </label>
@@ -94,7 +106,7 @@ export function LeadForm({ endpoint, submitLabel, eventName }: LeadFormProps) {
             required
             minLength={2}
             value={form.bairro}
-            onChange={(e) => onFieldChange('bairro', e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => onFieldChange('bairro', e.target.value)}
             className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
           />
         </label>
@@ -105,7 +117,7 @@ export function LeadForm({ endpoint, submitLabel, eventName }: LeadFormProps) {
           Tipo de serviço
           <select
             value={form.tipoServico}
-            onChange={(e) => onFieldChange('tipoServico', e.target.value)}
+            onChange={(e: ChangeEvent<HTMLSelectElement>) => onFieldChange('tipoServico', e.target.value as LeadPayload['tipoServico'])}
             className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
           >
             <option value="abastecimento-residencial">Abastecimento residencial</option>
@@ -121,7 +133,7 @@ export function LeadForm({ endpoint, submitLabel, eventName }: LeadFormProps) {
           Urgência
           <select
             value={form.urgencia}
-            onChange={(e) => onFieldChange('urgencia', e.target.value as LeadPayload['urgencia'])}
+            onChange={(e: ChangeEvent<HTMLSelectElement>) => onFieldChange('urgencia', e.target.value as LeadPayload['urgencia'])}
             className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
           >
             <option value="baixa">Baixa</option>
@@ -138,7 +150,7 @@ export function LeadForm({ endpoint, submitLabel, eventName }: LeadFormProps) {
           minLength={8}
           rows={4}
           value={form.mensagem}
-          onChange={(e) => onFieldChange('mensagem', e.target.value)}
+          onChange={(e: ChangeEvent<HTMLTextAreaElement>) => onFieldChange('mensagem', e.target.value)}
           className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
         />
       </label>

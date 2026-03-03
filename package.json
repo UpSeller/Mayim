@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test": "node -e \"console.log('No automated tests configured yet')\""
+    "test": "node -e \"console.log('No automated tests configured yet')\"",
+    "validate:release": "bash scripts/validate-release.sh"
   },
   "dependencies": {
     "next": "^15.2.0",
