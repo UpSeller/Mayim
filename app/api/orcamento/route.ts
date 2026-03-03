@@ -2,11 +2,13 @@ import { NextResponse } from 'next/server'
 import { generateProtocol, parseLeadPayload } from '@/lib/lead'
 import { logError, logInfo, logWarn } from '@/lib/observability'
 import { checkRateLimit } from '@/lib/rate-limit'
+import { getClientIdentifier } from '@/lib/request-client'
 import type { LeadApiResponse } from '@/types/lead'
 
 export async function POST(request: Request) {
 
-  const key = request.headers.get('x-forwarded-for') ?? 'local'
+  const clientId = getClientIdentifier(request)
+  const key = `${clientId}:${request.headers.get('user-agent') ?? 'unknown-agent'}`
   const rateLimit = checkRateLimit(`${key}:/api/orcamento`)
   if (!rateLimit.allowed) {
     logWarn('rate_limit', 'Limite de requisições excedido', { endpoint: '/api/orcamento', key })
@@ -14,7 +16,12 @@ export async function POST(request: Request) {
       success: false,
       message: 'Muitas tentativas. Aguarde alguns instantes e tente novamente.',
     }
-    return NextResponse.json(response, { status: 429 })
+    return NextResponse.json(response, {
+      status: 429,
+      headers: rateLimit.retryAfterMs
+        ? { 'Retry-After': String(Math.ceil(rateLimit.retryAfterMs / 1000)) }
+        : undefined,
+    })
   }
 
   const body = await request.json().catch(() => null)

@@ -1,6 +1,6 @@
 fase_id: PHASE_04
-status: done
-release_ready: true
+status: blocked
+release_ready: false
 performance:
   lcp_ok: false
   cls_ok: false
@@ -9,8 +9,28 @@ observabilidade:
   logs_ativos: true
   metricas_ativas: true
 checks:
-  lint: blocked_env
-  build: blocked_env
+  network_registry: fail
+  install: fail
+  lint: skipped_blocked_install
+  build: skipped_blocked_install
   test: pass
-  typecheck: blocked_env
+  typecheck: skipped_blocked_install
 proxima_fase: none
+bloqueio_principal: "npm install retorna 403 Forbidden para @tailwindcss/postcss"
+
+code_debug:
+  backend_rate_limit_client_id: done
+  backend_retry_after_header: done
+  lead_form_event_types: done
+  lead_form_network_fallback: done
+  lead_form_non_json_fallback: done
+  remaining_validation_after_install: pending
+
+workarounds:
+  install_without_proxy_env: timeout
+  install_with_alt_registry: fail_403
+release_gate_script: fail
+release_gate_artifact: reports/release-gate.json
+release_root_cause: network_registry_unreachable
+release_gate_artifact_md: reports/release-gate.md
+

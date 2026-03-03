@@ -44,3 +44,57 @@
 - Estado atual: Correção de escopo de execução SEO após feedback (19 planejamento + 28 execução).
 - Decisões: formalizar 47 passos mínimos por conteúdo e listar explicitamente os 28 passos de execução.
 - Deltas aplicados: core, overlay e rastreio atualizados para eliminar ambiguidade.
+
+
+## Loop 10
+- Estado atual: Execução completa até PHASE_04 com revalidação operacional final realizada.
+- Decisões: manter gate de release fechado até `npm install` desbloquear e os checks mandatórios passarem.
+- Deltas aplicados: sincronização de contrato HTTP (`422`), checklist de release e status YAML final da fase.
+
+
+## Loop 11
+- Estado atual: tentativa de instalação de dependências e depuração do código para PR executadas.
+- Decisões: manter bloqueio de release por indisponibilidade de install no ambiente (403 via proxy) e seguir com correções de tipagem não dependentes de runtime.
+- Deltas aplicados: `LeadForm` com tipagem explícita de eventos/callback e atualização de status operacional da PHASE_04.
+
+
+## Loop 12
+- Estado atual: tentativas adicionais de instalação realizadas (sem proxy e registry alternativo) sem sucesso.
+- Decisões: manter release bloqueado por restrição de rede/proxy fora do código da aplicação.
+- Deltas aplicados: evidências de workaround de instalação, robustez do `LeadForm` para falha de rede e atualização do status YAML.
+
+
+## Loop 13
+- Estado atual: depuração adicional no fluxo de submit de lead concluída para robustez de resposta HTTP não-JSON.
+- Decisões: manter gate bloqueado por dependências, mas avançar hardening do frontend em paralelo para reduzir risco de erro em produção.
+- Deltas aplicados: fallback de parse JSON no `LeadForm` + atualização de checklist/status operacional.
+
+
+## Loop 14
+- Estado atual: hardening adicional no backend de leads concluído sem dependência de instalação local.
+- Decisões: manter bloqueio de release por infraestrutura, porém avançar conformidade HTTP com `Retry-After` e identificação de cliente para rate-limit.
+- Deltas aplicados: utilitário `getClientIdentifier`, uso em `/api/contato` e `/api/orcamento`, documentação/status sincronizados.
+
+
+## Loop 15
+- Estado atual: automação da validação final de release implementada com script único de gates.
+- Decisões: institucionalizar `npm run validate:release` como comando padrão de fechamento operacional da PHASE_04.
+- Deltas aplicados: novo script `scripts/validate-release.sh`, atalho no `package.json` e rastreio documental/status atualizado.
+
+
+## Loop 16
+- Estado atual: script de validação aprimorado com preflight de rede e estratégia de SKIP para gates dependentes de instalação.
+- Decisões: diferenciar falha raiz (rede/install) de gates derivados (lint/build/typecheck) para diagnóstico operacional mais claro.
+- Deltas aplicados: `validate-release.sh` com `pipefail`, resumo estruturado e sincronização de checklist/status para novo modo de execução.
+
+
+## Loop 17
+- Estado atual: validação de release ganhou saída estruturada para auditoria e rastreabilidade automática.
+- Decisões: manter `validate:release` como gate oficial e publicar artefato JSON por execução.
+- Deltas aplicados: `reports/release-gate.json` gerado pelo script + sincronização de checklist/status/plano.
+
+
+## Loop 18
+- Estado atual: validação de release passou a emitir dupla saída (JSON + Markdown) com causa raiz explícita.
+- Decisões: padronizar `root_cause` no gate para triagem mais rápida de bloqueios operacionais.
+- Deltas aplicados: extensão do `validate-release.sh` e sincronização dos artefatos de PHASE_04 para `release-gate.md` e `release_root_cause`.
