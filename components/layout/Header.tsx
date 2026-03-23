@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { Logo } from './Logo'
 
 const links = [
   { href: '/sobre', label: 'Sobre' },
@@ -13,7 +12,9 @@ export function Header() {
   return (
     <header className="border-b border-slate-200 bg-white">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-        <Logo />
+        <Link href="/" className="text-xl font-bold text-blue-700">
+          Mayim
+        </Link>
         <nav aria-label="Navegação principal">
           <ul className="hidden items-center gap-6 text-sm font-medium text-slate-700 md:flex">
             {links.map((link) => (
