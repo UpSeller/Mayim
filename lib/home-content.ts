@@ -16,6 +16,21 @@ export const homeServices: HomeServiceItem[] = [
     description: 'Fornecimento para canteiros e apoio operacional em construção civil.',
     href: '/servicos/abastecimento-obras',
   },
+  {
+    title: 'Abastecimento para piscinas',
+    description: 'Enchimento e reposição de água para piscinas residenciais e comerciais.',
+    href: '/servicos/abastecimento-piscinas',
+  },
+  {
+    title: 'Lavagem de ruas',
+    description: 'Limpeza e lavagem de vias públicas e áreas externas com caminhão pipa.',
+    href: '/servicos/lavagem-de-ruas',
+  },
+  {
+    title: 'Umectação e irrigação',
+    description: 'Controle de poeira em terrenos e irrigação de áreas verdes.',
+    href: '/servicos/umectacao-e-irrigacao',
+  },
 ]
 
 export const homeAreas: HomeAreaItem[] = [
@@ -23,6 +38,9 @@ export const homeAreas: HomeAreaItem[] = [
   { name: 'Zona Norte', href: '/areas-atendidas/zona-norte' },
   { name: 'Zona Oeste', href: '/areas-atendidas/zona-oeste' },
   { name: 'Barra da Tijuca', href: '/areas-atendidas/barra-da-tijuca' },
+  { name: 'Centro', href: '/areas-atendidas/centro' },
+  { name: 'Niterói', href: '/areas-atendidas/niteroi' },
+  { name: 'Baixada Fluminense', href: '/areas-atendidas/baixada-fluminense' },
 ]
 
 export const homeFaq: HomeFaqItem[] = [

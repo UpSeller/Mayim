@@ -52,6 +52,9 @@ export default function HomePage() {
             </article>
           ))}
         </div>
+        <Link href="/servicos" className="mt-6 inline-block text-sm font-semibold text-blue-700 hover:underline">
+          Ver todos os serviços
+        </Link>
       </section>
 
       <section className="bg-slate-50">
@@ -68,6 +71,9 @@ export default function HomePage() {
               </Link>
             ))}
           </div>
+          <Link href="/areas-atendidas" className="mt-6 inline-block text-sm font-semibold text-blue-700 hover:underline">
+            Ver todas as áreas atendidas
+          </Link>
         </div>
       </section>
 
