@@ -4,25 +4,25 @@ export const homeServices: HomeServiceItem[] = [
   {
     title: 'Abastecimento residencial',
     description: 'Água potável para casas e condomínios com atendimento rápido.',
-    href: '/servicos',
+    href: '/servicos/abastecimento-residencial',
   },
   {
     title: 'Abastecimento comercial',
     description: 'Suporte para empresas, comércios e operações com demanda contínua.',
-    href: '/servicos',
+    href: '/servicos/abastecimento-comercial',
   },
   {
     title: 'Abastecimento para obras',
     description: 'Fornecimento para canteiros e apoio operacional em construção civil.',
-    href: '/servicos',
+    href: '/servicos/abastecimento-obras',
   },
 ]
 
 export const homeAreas: HomeAreaItem[] = [
-  { name: 'Zona Sul', href: '/areas-atendidas' },
-  { name: 'Zona Norte', href: '/areas-atendidas' },
-  { name: 'Zona Oeste', href: '/areas-atendidas' },
-  { name: 'Barra da Tijuca', href: '/areas-atendidas' },
+  { name: 'Zona Sul', href: '/areas-atendidas/zona-sul' },
+  { name: 'Zona Norte', href: '/areas-atendidas/zona-norte' },
+  { name: 'Zona Oeste', href: '/areas-atendidas/zona-oeste' },
+  { name: 'Barra da Tijuca', href: '/areas-atendidas/barra-da-tijuca' },
 ]
 
 export const homeFaq: HomeFaqItem[] = [

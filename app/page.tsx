@@ -81,6 +81,9 @@ export default function HomePage() {
             </article>
           ))}
         </div>
+        <Link href="/faq" className="mt-6 inline-block text-sm font-semibold text-blue-700 hover:underline">
+          Ver todas as perguntas frequentes
+        </Link>
       </section>
 
       <section className="bg-blue-900 text-white">

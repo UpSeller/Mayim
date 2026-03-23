@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { FaqJsonLd } from '@/components/seo/FaqJsonLd'
 
 const faqItems = [
@@ -14,7 +15,7 @@ const faqItems = [
   {
     question: 'Vocês atendem 24h?',
     answer:
-      'Sim, com operação estendida para cenários de emergência e falta d’água em residências e empresas.',
+      'Sim, com operação estendida para cenários de emergência e falta d\u2019água em residências e empresas.',
   },
   {
     question: 'Quais regiões vocês atendem?',
@@ -36,6 +37,26 @@ export default function FaqPage() {
           </article>
         ))}
       </div>
+      <div className="mt-10 flex flex-wrap gap-4">
+        <Link
+          href="/orcamento"
+          className="rounded-md bg-green-500 px-6 py-3 font-semibold text-white hover:bg-green-600"
+        >
+          Solicitar orçamento
+        </Link>
+        <Link
+          href="/contato"
+          className="rounded-md border border-slate-300 px-6 py-3 font-semibold text-slate-700 hover:bg-slate-50"
+        >
+          Falar com a equipe
+        </Link>
+      </div>
+      <p className="mt-6 text-sm text-slate-600">
+        Conheça nossos{' '}
+        <Link href="/servicos" className="font-semibold text-blue-700 hover:underline">serviços</Link>
+        {' '}ou veja as{' '}
+        <Link href="/areas-atendidas" className="font-semibold text-blue-700 hover:underline">áreas atendidas</Link>.
+      </p>
     </section>
   )
 }

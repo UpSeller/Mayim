@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { LeadForm } from '@/components/ui/LeadForm'
 
 export default function OrcamentoPage() {
@@ -13,6 +14,13 @@ export default function OrcamentoPage() {
         submitLabel="Solicitar orçamento"
         eventName="lead_submit_orcamento"
       />
+
+      <p className="mt-8 text-sm text-slate-600">
+        Tem dúvidas? Veja as{' '}
+        <Link href="/faq" className="font-semibold text-blue-700 hover:underline">perguntas frequentes</Link>
+        {' '}ou{' '}
+        <Link href="/contato" className="font-semibold text-blue-700 hover:underline">fale com a equipe</Link>.
+      </p>
     </section>
   )
 }

@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { LeadForm } from '@/components/ui/LeadForm'
 
 export default function ContatoPage() {
@@ -13,6 +14,13 @@ export default function ContatoPage() {
         submitLabel="Enviar contato"
         eventName="lead_submit_contato"
       />
+
+      <p className="mt-8 text-sm text-slate-600">
+        Prefere solicitar um orçamento direto?{' '}
+        <Link href="/orcamento" className="font-semibold text-blue-700 hover:underline">Clique aqui</Link>.
+        Veja também nossas{' '}
+        <Link href="/faq" className="font-semibold text-blue-700 hover:underline">perguntas frequentes</Link>.
+      </p>
     </section>
   )
 }
