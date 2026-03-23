@@ -112,6 +112,13 @@ app/
 | Conversão | /orcamento | orçamento carro pipa rj | preço caminhão pipa, quanto custa carro pipa |
 | FAQ | /faq | perguntas carro pipa | dúvidas caminhão pipa, como funciona |
 
+> **Regra de silo para páginas de localidade:**
+> - Atendem APENAS `kwROOT + região` (ex: "caminhão pipa zona sul rj")
+> - NÃO criar sub-URLs por serviço dentro de áreas (`/areas-atendidas/zona-sul/residencial` **NÃO** deve existir)
+> - Conteúdo específico de serviço vive EXCLUSIVAMENTE em `/servicos/*`
+> - H1 da página de área: "Caminhão Pipa na {Região}" (genérico, sem menção a serviço)
+> - **Bairros individuais** (Copacabana, Ipanema, etc.) são cobertos como seções `<h2>`/`<h3>` dentro da página de região, usando "Caminhão Pipa em {Bairro}" como heading. Expansão para URLs próprias (`/areas-atendidas/zona-sul/copacabana`) é fase futura.
+
 ### 3.2 HTML Semântico (por página)
 
 Cada página deve utilizar as tags semânticas HTML5 corretamente:
@@ -270,25 +277,52 @@ Mayim (Organization/LocalBusiness)
 }
 ```
 
-#### 4.2.3 Páginas de Área Atendida — `Service` + `areaServed`
+#### 4.2.3 Páginas de Área Atendida — `Service` + `areaServed` (otimização local)
 
 ```json
 {
   "@context": "https://schema.org",
   "@type": "Service",
-  "name": "Carro Pipa Zona Sul RJ",
-  "description": "Abastecimento de água potável por carro pipa na Zona Sul do Rio de Janeiro: Copacabana, Ipanema, Leblon, Botafogo, Flamengo e mais.",
+  "name": "Caminhão Pipa Zona Sul RJ",
+  "description": "Abastecimento de água potável por caminhão pipa na Zona Sul do Rio de Janeiro: Copacabana, Ipanema, Leblon, Botafogo, Flamengo e mais.",
   "provider": { "@id": "https://mayim.com.br/#organization" },
   "areaServed": {
     "@type": "Place",
     "name": "Zona Sul",
     "containedInPlace": {
       "@type": "City",
-      "name": "Rio de Janeiro"
-    }
+      "name": "Rio de Janeiro",
+      "sameAs": "https://www.wikidata.org/wiki/Q8678"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": -22.9711,
+      "longitude": -43.1822
+    },
+    "containsPlace": [
+      { "@type": "Neighborhood", "name": "Copacabana" },
+      { "@type": "Neighborhood", "name": "Ipanema" },
+      { "@type": "Neighborhood", "name": "Leblon" },
+      { "@type": "Neighborhood", "name": "Botafogo" },
+      { "@type": "Neighborhood", "name": "Flamengo" }
+    ]
+  },
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Serviços disponíveis na Zona Sul",
+    "itemListElement": [
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Caminhão Pipa 5.000 litros" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Caminhão Pipa 10.000 litros" } }
+    ]
   }
 }
 ```
+
+**Sinais geo-locais adicionados:**
+- `GeoCoordinates` por região (centroide)
+- `containsPlace` com `Neighborhood` listando sub-bairros
+- `sameAs` → Wikidata da cidade (Knowledge Graph)
+- `hasOfferCatalog` genérico (volumes, não serviços específicos)
 
 #### 4.2.4 FAQ — `FAQPage`
 
@@ -385,6 +419,7 @@ components/
 ├── ui/
 │   ├── Button.tsx              # Botão reutilizável (CTA)
 │   ├── Card.tsx                # Card de serviço/área
+│   ├── InternalLink.tsx        # Link interno com title/aria-label automáticos (ver 7.2)
 │   ├── WhatsAppButton.tsx      # Botão flutuante WhatsApp
 │   ├── HeroSection.tsx         # Hero da home
 │   ├── TestimonialCard.tsx     # Depoimento de cliente
@@ -402,6 +437,33 @@ components/
     ├── BlogCard.tsx            # Card de artigo
     └── BlogList.tsx            # Listagem de artigos
 ```
+
+#### `InternalLink.tsx` — Componente de Link Interno
+
+Wrapper sobre `next/link` que gera `title` e `aria-label` automaticamente a partir do nome da região + kwROOT ("Caminhão Pipa").
+
+**Uso:**
+```tsx
+<InternalLink href="/areas-atendidas/zona-sul" region="Zona Sul">
+  Zona Sul
+</InternalLink>
+```
+
+**Renderiza:**
+```html
+<a href="/areas-atendidas/zona-sul"
+   title="Caminhão Pipa na Zona Sul RJ"
+   aria-label="Saiba mais sobre caminhão pipa na Zona Sul do Rio de Janeiro">
+  Zona Sul
+</a>
+```
+
+**Props:**
+- `href` — URL destino
+- `region` (opcional) — nome da região; quando presente, gera `title` e `aria-label` com kwROOT
+- Sem `region`, funciona como `next/link` normal
+
+**Objetivo:** Garantir que todo link para área tenha anchor text limpo (só nome) + atributos semânticos, sem depender do dev lembrar de adicionar manualmente.
 
 ### 5.3 Home Page — Estrutura
 
@@ -480,6 +542,25 @@ export const metadata: Metadata = {
 }
 ```
 
+#### Padrão de Metadata para Páginas de Área (`/areas-atendidas/[area]`)
+
+```typescript
+// app/areas-atendidas/[area]/page.tsx
+export function generateMetadata({ params }): Metadata {
+  return {
+    title: `Caminhão Pipa ${regiao.nome} - Entrega 24h | Mayim`,
+    description: `Caminhão pipa na ${regiao.nome} do Rio de Janeiro. Entrega de água potável 24h em ${regiao.bairros.join(', ')}. Solicite orçamento!`,
+    openGraph: {
+      type: 'website',
+      locale: 'pt_BR',
+      title: `Caminhão Pipa ${regiao.nome} | Mayim`,
+      description: `Caminhão pipa na ${regiao.nome} do Rio de Janeiro. Entrega de água potável 24h.`,
+      images: [{ url: `/og/${regiao.slug}.jpg`, width: 1200, height: 630 }],
+    },
+  }
+}
+```
+
 ### 6.2 Sitemap Dinâmico
 
 ```typescript
@@ -505,11 +586,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/areas-atendidas/baixada-fluminense',
   ]
 
+  // Prioridades por tipo de página (SEO local)
+  const getPriority = (path: string): number => {
+    if (path === '') return 1.0                           // Home
+    if (path === '/servicos') return 0.9                  // Hub serviços
+    if (path === '/areas-atendidas') return 0.9           // Hub áreas
+    if (path.startsWith('/servicos/')) return 0.8         // Serviço individual
+    if (path.startsWith('/areas-atendidas/')) return 0.8  // Área individual
+    if (path.startsWith('/blog')) return 0.7              // Blog
+    return 0.6                                            // Orçamento, contato, FAQ
+  }
+
+  const getFrequency = (path: string): string => {
+    if (path === '' || path.startsWith('/blog')) return 'weekly'
+    return 'monthly'
+  }
+
   return staticPages.map(path => ({
     url: `${baseUrl}${path}`,
     lastModified: new Date(),
-    changeFrequency: 'monthly',
-    priority: path === '' ? 1 : 0.8,
+    changeFrequency: getFrequency(path),
+    priority: getPriority(path),
   }))
 }
 ```
@@ -540,35 +637,78 @@ export default function robots(): MetadataRoute.Robots {
 
 ### 7.1 Estrutura de Links Internos
 
+> **Regra de silo**: Páginas de área são GENÉRICAS (kwROOT + região). NÃO contêm conteúdo específico de serviço. Conteúdo de serviço vive EXCLUSIVAMENTE em `/servicos/*`.
+
+**Topologia hub-spoke:**
+```
+/areas-atendidas/ (HUB) → distribui PageRank para todas as áreas
+    ├── zona-sul (SPOKE) → linka de volta ao hub + todos os serviços
+    ├── zona-norte (SPOKE) → linka de volta ao hub + todos os serviços
+    ├── zona-oeste (SPOKE) → linka de volta ao hub + todos os serviços
+    ├── barra-da-tijuca (SPOKE) → linka de volta ao hub + todos os serviços
+    ├── centro (SPOKE) → linka de volta ao hub + todos os serviços
+    ├── niteroi (SPOKE) → linka de volta ao hub + todos os serviços
+    └── baixada-fluminense (SPOKE) → linka de volta ao hub + todos os serviços
+```
+
+**Diagrama de interlinking:**
 ```
 Home
 ├── → /servicos (link no texto + grid)
 │   ├── → /servicos/abastecimento-residencial
-│   │   └── ↔ /areas-atendidas/zona-sul (cross-link)
+│   │   └── → /areas-atendidas/zona-sul + zona-norte (âncora = nome da região)
 │   ├── → /servicos/abastecimento-comercial
-│   │   └── ↔ /areas-atendidas/centro (cross-link)
-│   └── → /servicos/abastecimento-piscinas
-│       └── ↔ /areas-atendidas/barra-da-tijuca (cross-link)
+│   │   └── → /areas-atendidas/centro + barra-da-tijuca (âncora = nome da região)
+│   ├── → /servicos/abastecimento-obras
+│   │   └── → /areas-atendidas/baixada-fluminense + zona-oeste (âncora = nome da região)
+│   ├── → /servicos/abastecimento-piscinas
+│   │   └── → /areas-atendidas/barra-da-tijuca + zona-sul (âncora = nome da região)
+│   ├── → /servicos/lavagem-de-ruas
+│   │   └── → /areas-atendidas/centro + zona-norte (âncora = nome da região)
+│   └── → /servicos/umectacao-e-irrigacao
+│       └── → /areas-atendidas/zona-oeste + baixada-fluminense (âncora = nome da região)
 │
 ├── → /areas-atendidas (link no texto + grid)
 │   ├── → /areas-atendidas/zona-sul
-│   │   └── ↔ /servicos/* (links para serviços)
-│   └── → /areas-atendidas/zona-norte
-│       └── ↔ /servicos/* (links para serviços)
+│   │   └── → TODOS /servicos/* (âncoras variadas e descritivas)
+│   ├── → /areas-atendidas/zona-norte
+│   │   └── → TODOS /servicos/* (âncoras variadas e descritivas)
+│   └── (idem para cada área)
 │
 ├── → /blog (artigos linkam para serviços e áreas)
-│   └── ↔ /servicos/* + /areas-atendidas/*
+│   └── → /servicos/* + /areas-atendidas/* (âncora contextual natural)
 │
 ├── → /faq → links para serviços específicos nas respostas
 └── → /orcamento (CTA em todas as páginas)
 ```
 
-### 7.2 Anchor Texts
+### 7.2 Anchor Texts — Estratégia em 3 Camadas
 
-- Usar textos-âncora descritivos: "carro pipa na Zona Sul" em vez de "clique aqui"
-- Variar os anchors para evitar over-optimization
+#### Links serviço → área
+- **Texto-âncora**: apenas o nome da região ("Zona Sul", "Barra da Tijuca")
+- **`title`**: `"Caminhão Pipa na {Região} RJ"` (tooltip + sinal contextual)
+- **`aria-label`**: `"Saiba mais sobre caminhão pipa na {Região} do Rio de Janeiro"` (acessibilidade + semântica)
 - Cada página de serviço linka para 2-3 áreas atendidas relevantes
-- Cada página de área linka para todos os serviços disponíveis naquela região
+
+**Exemplo HTML:**
+```html
+<a href="/areas-atendidas/zona-sul"
+   title="Caminhão Pipa na Zona Sul RJ"
+   aria-label="Saiba mais sobre caminhão pipa na Zona Sul do Rio de Janeiro">
+  Zona Sul
+</a>
+```
+
+> **Nota técnica:** O atributo `alt` é válido apenas em `<img>`, `<area>` e `<input>`. Para `<a>`, usar `title` (tooltip + crawlers) e `aria-label` (acessibilidade + semântica).
+
+#### Links área → serviço
+- Âncora descritiva e **variada** por página ("abastecimento residencial", "água para sua casa", "serviço para condomínios")
+- **Proibido** repetir a mesma âncora em múltiplas áreas
+- Cada página de área linka para **todos** os serviços disponíveis
+
+#### Links blog → área/serviço
+- Âncora contextual natural no corpo do texto
+- Variar os anchors para evitar over-optimization
 
 ---
 
